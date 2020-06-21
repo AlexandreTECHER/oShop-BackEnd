@@ -22,6 +22,30 @@ class Category extends CoreModel {
     private $home_order;
 
     /**
+     * Get the value of name
+     *
+     * @return  string
+     */ 
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set the value of name
+     *
+     * @param  string  $name
+     *
+     * @return  self
+     */ 
+    public function setName(string $name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
      * Get the value of subtitle
      */ 
     public function getSubtitle()
@@ -87,7 +111,7 @@ class Category extends CoreModel {
      * @param int $categoryId ID de la catégorie
      * @return Category
      */
-    public function find($categoryId)
+    public static function find($categoryId)
     {
         // se connecter à la BDD
         $pdo = Database::getPDO();
@@ -110,7 +134,7 @@ class Category extends CoreModel {
      * 
      * @return Category[]
      */
-    public function findAll()
+    public static function findAll()
     {
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `category`';
@@ -139,4 +163,56 @@ class Category extends CoreModel {
         
         return $categories;
     }
+
+    /**
+     * Méthode d'insertion d'une nouvelle catégorie en BDD
+     * @return bool
+     */
+    public function insert(){
+        $pdo = Database::getPDO();
+        $statement = $pdo->prepare("INSERT INTO `category` (`name`, `subtitle`, `picture`) VALUES(:name, :subtitle, :picture)");
+        $success = $statement->execute([
+            ':name' => $this->name,
+            ':subtitle' => $this->subtitle,
+            ':picture' => $this->picture
+        ]);
+
+        if($success){
+
+            $this->id = $pdo->lastInsertId();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Méthode de mise à jour d'une catégorie
+     * @return bool
+     */
+    public function update(){
+        $pdo = Database::getPDO();
+        $sql = "
+            UPDATE `category`
+            SET
+                name = :name,
+                subtitle = :subtitle,
+                picture = :picture,
+                home_order = :home_order,
+                updated_at = NOW()
+            WHERE id = :categoryId
+        ";
+        $statement = $pdo->prepare($sql);
+        $success = $statement->execute([
+            ':name' => $this->name,
+            ':subtitle' => $this->subtitle,
+            ':picture' => $this->picture,
+            ':home_order' => $this->home_order,
+            ':categoryId' => $this->id
+        ]);
+
+        return $success;
+
+        }
 }

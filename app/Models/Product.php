@@ -82,7 +82,7 @@ class Product extends CoreModel {
      * 
      * @return Product[]
      */
-    public function findAll()
+    public static function findAll()
     {
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `product`';
@@ -219,7 +219,7 @@ class Product extends CoreModel {
      */ 
     public function getBrandId()
     {
-        return $this->brandId;
+        return $this->brand_id;
     }
 
     /**
@@ -270,5 +270,30 @@ class Product extends CoreModel {
     public function setTypeId(int $type_id)
     {
         $this->type_id = $type_id;
+    }
+
+    public function insert(){
+
+        $pdo = Database::getPDO();
+        $statement = $pdo->prepare("INSERT INTO `product` (`name`, `description`, `picture`, `price`, `rate`, `status`, `brand_id`, `category_id`, `type_id`) 
+        VALUES (:name, :description, :picture, :price, :rate, :status, :brand_id, :category_id, :type_id)");
+        $success= $statement->execute([
+            'name' => $this->name,
+            'description' => $this->description,
+            'picture' => $this->picture,
+            'price' => $this->price,
+            'rate' => $this->rate,
+            'status' => $this->status,
+            'brand_id' => $this->brand_id,
+            'category_id' => $this->category_id,
+            'type_id' => $this->type_id,
+        ]);
+
+        if($success){
+            $this->id = $pdo->lastInsertId();
+            return true;
+        }else{
+            return false;
+        }
     }
 }
