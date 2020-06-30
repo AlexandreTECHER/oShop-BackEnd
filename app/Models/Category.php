@@ -149,7 +149,7 @@ class Category extends CoreModel {
      * 
      * @return Category[]
      */
-    public function findAllHomepage()
+    public static function findAllHomepage()
     {
         $pdo = Database::getPDO();
         $sql = '
@@ -214,5 +214,24 @@ class Category extends CoreModel {
 
         return $success;
 
-        }
+    }
+
+    /**
+     * Méthode de suppression d'une catégorie
+     */
+    public function delete(){
+
+        $pdo = Database::getPDO();
+        $sql = "
+            DELETE FROM `category` 
+            WHERE id = :id
+        ";
+        $statement = $pdo->prepare($sql);
+
+        $success = $statement->execute([
+            ':id' => $this->id
+        ]);
+
+        return $success;
+    }
 }

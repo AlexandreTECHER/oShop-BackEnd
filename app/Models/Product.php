@@ -54,7 +54,7 @@ class Product extends CoreModel {
      * @param int $productId ID du produit
      * @return Product
      */
-    public function find($productId)
+    public static function find($productId)
     {
         // récupérer un objet PDO = connexion à la BDD
         $pdo = Database::getPDO();
@@ -272,12 +272,31 @@ class Product extends CoreModel {
         $this->type_id = $type_id;
     }
 
+    /**
+     * Récupérer les 5 produits mis en avant sur la home
+     * 
+     * @return Product[]
+     */
+    public static function findAllHomepage()
+    {
+        $pdo = Database::getPDO();
+        $sql = '
+            SELECT *
+            FROM product
+            ORDER BY id ASC LIMIT 5
+        ';
+        $pdoStatement = $pdo->query($sql);
+        $products = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Product');
+        
+        return $products;
+    }
+
     public function insert(){
 
         $pdo = Database::getPDO();
         $statement = $pdo->prepare("INSERT INTO `product` (`name`, `description`, `picture`, `price`, `rate`, `status`, `brand_id`, `category_id`, `type_id`) 
         VALUES (:name, :description, :picture, :price, :rate, :status, :brand_id, :category_id, :type_id)");
-        $success= $statement->execute([
+        $success = $statement->execute([
             'name' => $this->name,
             'description' => $this->description,
             'picture' => $this->picture,
@@ -296,4 +315,41 @@ class Product extends CoreModel {
             return false;
         }
     }
+
+    public function update(){
+
+        $pdo = Database::getPDO();
+        $sql = "
+            UPDATE `product`
+            SET 
+                name = :name,
+                description = :description,
+                picture = :picture,
+                price = :price,
+                rate = :rate,
+                status = :status,
+                updated_at = NOW(),
+                brand_id = :brand_id,
+                category_id = :category_id,
+                type_id = :type_id
+            WHERE id = :id
+        ";
+
+        $statement = $pdo->prepare($sql);
+        $result = $statement->execute([
+            ':name' => $this->name,
+            ':description' => $this->description,
+            ':picture' => $this->picture,
+            ':price' => $this->price,
+            ':rate' => $this->rate,
+            ':status' => $this->status,
+            ':brand_id' => $this->brand_id,
+            ':category_id' => $this->category_id,
+            ':type_id' => $this->type_id,
+            ':id' => $this->id
+        ]);
+
+        return $result;
+    }
+
 }

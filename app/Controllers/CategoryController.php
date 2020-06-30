@@ -60,6 +60,10 @@ class CategoryController extends CoreController{
         
     }
 
+    /**
+     * Affiche le formulaire de MAJ d'une catégorie
+     * @param int
+     */
     public function update($categoryId){
 
         $updateCategory = Category::find($categoryId);
@@ -71,6 +75,8 @@ class CategoryController extends CoreController{
 
     public function updatePost($categoryId){
 
+        global $router;
+
         $name = filter_input(INPUT_POST, 'name');
         $subtitle = filter_input(INPUT_POST, 'subtitle');
         $picture = filter_input(INPUT_POST, 'picture');
@@ -79,10 +85,26 @@ class CategoryController extends CoreController{
         $updateCategory->setName($name);
         $updateCategory->setSubtitle($subtitle);
         $updateCategory->setPicture($picture);
-        $updateCategory->update();
+        
+        $success = $updateCategory->update();
 
-        $this->show('categories/add',[
-            'category' => $updateCategory,
-        ]);
+        if($success){
+            $redirect = $router->generate('categories-list');
+        }else{
+            $redirect = $router->generate('category-update', ['categoryId' => $updateCategory->getId()]);
+        }
+
+        header('Location: ' .$redirect);
+    }
+
+    public function delete($categoryId){
+
+        global $router;
+
+        $category = Category::find($categoryId);
+        $category->delete();
+
+        header('Location:' . $router->generate('categories-list'));
+
     }
 }

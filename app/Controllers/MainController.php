@@ -2,6 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Models\Category;
+use App\Models\Product;
+
 class MainController extends CoreController {
 
     /**
@@ -11,6 +14,13 @@ class MainController extends CoreController {
      */
     public function home()
     {
-        $this->show('main/home');
+        $categories = Category::findAllHomepage();
+        $products = Product::findAllHomepage();
+
+        $this->show('main/home', [
+            'categories' => $categories,
+            'products' => $products,
+        ]);
     }
+
 }

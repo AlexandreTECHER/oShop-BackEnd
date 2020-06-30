@@ -2,7 +2,13 @@
 
 require_once '../vendor/autoload.php';
 
+session_start();
+
 $router = new AltoRouter();
+
+if($_SESSION){
+    echo 'Bonjour ' . $_SESSION['connectedUser']->getFirstname();
+}
 
 if (array_key_exists('BASE_URI', $_SERVER)) {
 
@@ -12,6 +18,77 @@ if (array_key_exists('BASE_URI', $_SERVER)) {
 else {
     $_SERVER['BASE_URI'] = '/';
 }
+
+$router->map(
+    'GET',
+    '/login',
+    [
+        'method' => 'login',
+        'controller' => '\App\Controllers\UserController'
+    ],
+    'login'
+);
+
+$router->map(
+    'POST',
+    '/login',
+    [
+        'method' => 'loginPost',
+        'controller' => '\App\Controllers\UserController'
+    ],
+    'login-post'
+);
+
+$router->map(
+    'GET',
+    '/logout',
+    [
+        'method' => 'logout',
+        'controller' => '\App\Controllers\UserController'
+    ],
+    'logout'
+);
+
+$router->map(
+    'GET',
+    '/users/list',
+    [
+        'method' => 'list',
+        'controller' => '\App\Controllers\UserController'
+    ],
+    'users-list'
+);
+
+$router->map(
+    'GET',
+    '/users/add',
+    [
+        'method' => 'add',
+        'controller' => '\App\Controllers\UserController'
+    ],
+    'user-add'
+);
+
+$router->map(
+    'POST',
+    '/users/add',
+    [
+        'method' => 'addPost',
+        'controller' => '\App\Controllers\UserController'
+    ],
+    'user-add-post'
+);
+
+$router->map(
+    'GET',
+    '/users/update[i:userId]',
+    [
+        'method' => 'update',
+        'controller' => '\App\Controllers\UserController'
+    ],
+    'user-update'
+);
+
 
 $router->map(
     'GET',
@@ -73,6 +150,17 @@ $router->map(
     'category-update-post'
 );
 
+
+$router->map(
+    'GET',
+    '/category/delete/[i:categoryId]',
+    [
+        'method' => 'delete',
+        'controller' => '\App\Controllers\CategoryController'
+    ],
+    'category-delete'
+);
+
 $router->map(
     'GET',
     '/product/list',
@@ -101,6 +189,26 @@ $router->map(
         'controller' => '\App\Controllers\ProductController'
     ],
     'product-add-post'
+);
+
+$router->map(
+    'GET',
+    '/product/update/[i:productId]',
+    [
+        'method' => 'update',
+        'controller' => '\App\Controllers\ProductController'
+    ],
+    'product-update'
+);
+
+$router->map(
+    'POST',
+    '/product/update/[i:productId]',
+    [
+        'method' => 'updatePost',
+        'controller' => '\App\Controllers\ProductController'
+    ],
+    'product-update-post'
 );
 
 $match = $router->match();

@@ -52,7 +52,7 @@ class Type extends CoreModel {
      * 
      * @return Type[]
      */
-    public function findAll()
+    public static function findAll()
     {
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `type`';

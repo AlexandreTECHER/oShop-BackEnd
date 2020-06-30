@@ -1,5 +1,5 @@
-<a href="<?= $router->generate('product-add'); ?>" class="btn btn-success float-right">Ajouter</a>
-        <h2>Liste des produits</h2>
+<a href="<?= $router->generate('user-add'); ?>" class="btn btn-success float-right">Ajouter</a>
+        <h2>Liste des catégories</h2>
         <table class="table table-hover mt-4">
             <thead>
                 <tr>
@@ -10,13 +10,15 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($list as $product) : ?>
+                <?php foreach($users as $user) : ?>
                 <tr>
-                    <th scope="row"><?= $product->getId() ?></th>
-                    <td><?= $product->getName() ?></td>
-                    <td><?= $product->getDescription() ?></td>
+                    <th scope="row"><?= $user->getId() ?></th>
+                    <td><?= $user->getEmail() ?></td>
+                    <td><?= $user->getFirstname() ?></td>
+                    <td><?= $user->getLastname() ?></td>
+                    <td><?= $user->getRole() ?></td>
                     <td class="text-right">
-                        <a href="<?= $router->generate('product-update', ['productId' => $product->getId()]); ?>" class="btn btn-sm btn-warning">
+                        <a href="<?= $router->generate('user-update', ['userId' => $user->getId()]) ?>" class="btn btn-sm btn-warning">
                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                         </a>
                         <!-- Example single danger button -->
@@ -26,7 +28,7 @@
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Oui, je veux supprimer</a>
+                                <a class="dropdown-item" href="">Oui, je veux supprimer</a>
                                 <a class="dropdown-item" href="#" data-toggle="dropdown">Oups !</a>
                             </div>
                         </div>

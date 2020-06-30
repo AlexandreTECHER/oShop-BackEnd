@@ -1,5 +1,5 @@
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
+        <div class="container-fluid">
             <a class="navbar-brand" href="<?= $router->generate('main-home') ?>">oShop</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,6 +34,12 @@
                     <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Rechercher">
                     <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Rechercher</button>
                 </form>
+
+                <?php if(!isset($_SESSION['connectedUser'])) : ?>
+                    <a href="<?= $router->generate('login') ?>"><button type="button" class="btn btn-success">Connexion</button></a> 
+                <?php else : ?>
+                    <a href="<?= $router->generate('logout') ?>"><button type="button" class="btn btn-success">Déconnexion</button></a> 
+                <?php endif ?>
             </div>
         </div>
     </nav>
